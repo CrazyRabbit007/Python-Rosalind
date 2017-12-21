@@ -1,0 +1,13 @@
+def sumOfAllOddIntegers(a,b):
+    rangeOfNumbersBetweeAandB = range(a,b)
+    oddNumberListTotal = filterOddNumberList(rangeOfNumbersBetweeAandB)
+    print oddNumberListTotal
+
+def filterOddNumberList(numberList):
+    total = 0
+    for i in numberList:
+        if (i % 2 == 1):
+            total += i
+    return total
+
+sumOfAllOddIntegers(4684, 9352)

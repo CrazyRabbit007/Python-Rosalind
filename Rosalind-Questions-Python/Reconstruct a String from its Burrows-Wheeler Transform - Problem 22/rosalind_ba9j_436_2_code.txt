@@ -1,0 +1,69 @@
+inputFilePath = "/Users/RJ/Downloads/rosalind_ba9j-2.txt"
+outputFilepath = "/Users/RJ/Desktop/answer.txt"
+import sys
+
+#Read the file and import the string
+def fastaRead(filename):
+    """This reads the Rosalind file and turns the sequences into a list"""
+    fasta = {}
+    rosalindFile = "false"
+    oneString = ""
+    with open(filename, "r") as file_test:
+        for tmpline in file_test:
+            tmpline = tmpline.strip()
+            if tmpline.startswith(">"):
+                rosalindFile = "true"
+            elif (rosalindFile == "false"):
+                oneString += tmpline
+    if(rosalindFile == "false"):
+        return oneString
+    with open(filename, "r") as file_one:
+        for line in file_one:
+            line = line.strip()
+            if not line:
+                continue
+            if line.startswith(">"):
+                active_sequence_name = line[1:]
+                if active_sequence_name not in fasta:
+                    fasta[active_sequence_name] = []
+                continue
+            sequence = line
+            fasta[active_sequence_name].append(sequence)
+        numberDictKey = len(fasta)
+        numberOfValueInKey = 0
+        singleDna = ""
+        for numberDictKey in fasta:
+            valuesInKey = fasta[numberDictKey]
+            numberOfValueInKey = len(valuesInKey)
+            for numberOfValueInKey in valuesInKey:
+                singleDna += numberOfValueInKey
+                fasta[numberDictKey] = singleDna
+            singleDna = ""
+    return fasta
+
+
+
+charOfOriginalString = []
+inputString = fastaRead(inputFilePath)
+#Get the length of the inputString
+print "Get the length of the inputString"
+lengthOfString = len(inputString) - 1
+
+charOfOriginalString = list(inputString)
+appendedListOfChar = sorted(charOfOriginalString)
+
+print "Appending the list of characters to sorted strings..."
+for numberOfChar in range(lengthOfString):
+    print "Currently on: " + '{}'.format(numberOfChar) + " of " + '{}'.format(lengthOfString)
+    appendedListOfChar = sorted(appendedListOfChar)
+    indexNumber = 0
+    for charString in appendedListOfChar:
+        appendedListOfChar[indexNumber] = charOfOriginalString[indexNumber] + appendedListOfChar[indexNumber]
+        indexNumber += 1
+
+with open(outputFilepath, 'w') as f:
+    print "Finding the correct string that ends with $..."
+    for i in appendedListOfChar:
+        if (i.endswith("$")):
+            print "Writing the selected string to: " + outputFilepath
+            f.write(i)

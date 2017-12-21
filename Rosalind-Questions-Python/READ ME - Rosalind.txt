@@ -1,0 +1,38 @@
+This repository contains my Rosalind answers for all of the following questions. All have been tested and worked.
+
+Installing Python
+Counting DNA Nucleotides
+Strings and Lists
+Working with Files
+Dictionaries
+Transcribing DNA into RNA
+Translating RNA into Protein
+Find the Reverse Complement of a String
+Inferring mRNA from Protein
+Transitions and Transversions
+Generate the k-mer Composition of a String
+Reconstruct a String from its Genome Path
+Constructing a De Bruijn Graph
+Open Reading Frames
+Counting Point Mutations
+Finding a Motif in DNA
+Edit Distance
+Edit Distance Alignment
+Finding a Shared Motif
+Creating a Distance Matrix
+Construct the Suffix Array of a String
+Reconstruct a String from its Burrows-Wheeler Transform
+Enumerating Gene Orders
+Enumerating Oriented Gene Orderings
+RNA Splicing
+Finding a Spliced Motif
+Mendel's First Law
+Compute the Probability of a Hidden Path
+Compute the Probability of an Outcome Given a Hidden Path
+Implement the Viterbi Algorithm
+Conditions and Loops
+Mortal Fibonacci Rabbits
+Finding a Protein Motif
+Error Correction in Reads
+Global Alignment with Scoring Matrix
+Local Alignment with Scoring Matrix

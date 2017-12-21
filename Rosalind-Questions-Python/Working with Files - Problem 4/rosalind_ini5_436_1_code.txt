@@ -1,0 +1,8 @@
+i = 1
+readFile = open('/Users/RJ/Downloads/rosalind_ini5.txt', 'r')
+outFile = open('/Users/RJ/Desktop/output.txt', 'w')
+
+for line in readFile.readlines():
+	if i % 2 == 0 :
+		outFile.write(line)
+	i+= 1

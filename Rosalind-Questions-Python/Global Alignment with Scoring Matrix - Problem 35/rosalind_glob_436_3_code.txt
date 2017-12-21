@@ -1,0 +1,64 @@
+inputFilePath = "/Users/RJ/Downloads/rosalind_glob-3.txt"
+outputFilePath = "/Users/RJ/Desktop/answer.txt"
+
+from Bio import pairwise2
+from Bio.SubsMat import MatrixInfo as matrixlist
+
+def fastaRead(filename):
+    """This reads the Rosalind file and turns the sequences into a list, changes the keys to numbers"""
+    fasta = {}
+    rosalindFile = "false"
+    oneString = ""
+    with open(filename, "r") as file_test:
+        for tmpline in file_test:
+            tmpline = tmpline.strip()
+            if tmpline.startswith(">"):
+                rosalindFile = "true"
+            elif (rosalindFile == "false"):
+                oneString += tmpline
+    if(rosalindFile == "false"):
+        return oneString
+    count = -1
+    with open(filename, "r") as file_one:
+        for line in file_one:
+            line = line.strip()
+            if not line:
+                continue
+            if line.startswith(">"):
+                count += 1
+                fasta[count] = []
+                continue
+            sequence = line
+            fasta[count].append(sequence)
+        numberDictKey = len(fasta)
+        numberOfValueInKey = 0
+        singleDna = ""
+        for numberDictKey in fasta:
+            valuesInKey = fasta[numberDictKey]
+            numberOfValueInKey = len(valuesInKey)
+
+            for numberOfValueInKey in valuesInKey:
+                singleDna += numberOfValueInKey
+
+                fasta[numberDictKey] = singleDna
+            singleDna = ""
+    return fasta
+
+
+#Get the maximum alignment from the two protein sequences
+with open(outputFilePath, 'w') as f:
+    valuesKeys = fastaRead(inputFilePath)
+    valuesList = []
+    answerList = []
+
+    matrix = matrixlist.blosum62
+
+    for i in valuesKeys:
+        valuesList.append(valuesKeys[i])
+
+    pairWiseAlignments = pairwise2.align.globalds(valuesList[1], valuesList[0], matrix, -5, -5)
+    answerList.append(list(pairWiseAlignments[0]))
+    maxAlignment = int(answerList[0][2])
+
+    f.write('{}'.format(maxAlignment))
+print "Maximum alignment has been written to: " + outputFilePath

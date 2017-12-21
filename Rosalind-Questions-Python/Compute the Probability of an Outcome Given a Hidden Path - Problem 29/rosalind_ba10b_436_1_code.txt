@@ -1,0 +1,35 @@
+sequenceOne = "xyxxxxzzyzyyzyxyxzyyzyyzyxxxyzyxxyzxyzxzxzzyyzzyzy"
+sequenceTwo = "BBAAABABABAAABABAABBBABBAABABBAABBAABBBABBBBABBBAA"
+
+AtoX = 0.541
+AtoY = 0.449
+AtoZ = 0.009
+BtoX = 0.441
+BtoY = 0.46
+BtoZ = 0.099
+
+prob = []
+
+for i in range(len(sequenceTwo)):
+    if sequenceTwo[i] == 'A':
+        if sequenceOne[i] == 'x':
+            prob.append(AtoX)
+        elif sequenceOne[i] == 'y':
+            prob.append(AtoY)
+        else:
+            prob.append(AtoZ)
+    else:
+        if sequenceOne[i] == 'x':
+            prob.append(BtoX)
+        elif sequenceOne[i] == 'y':
+            prob.append(BtoY)
+        else:
+            prob.append(BtoZ)
+
+def multiplyList(myList):
+    total = 1
+    for i in myList:
+        total = total * i
+    return total
+
+print multiplyList(prob)

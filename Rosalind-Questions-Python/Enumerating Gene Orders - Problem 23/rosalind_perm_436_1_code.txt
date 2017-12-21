@@ -1,0 +1,62 @@
+inputFilePath = "/Users/RJ/Downloads/rosalind_perm.txt"
+outputFilePath = "/Users/RJ/Desktop/answer.txt"
+
+from itertools import permutations
+
+def fastaRead(filename):
+    """This reads the Rosalind file and turns the sequences into a list"""
+    fasta = {}
+    rosalindFile = "false"
+    oneString = ""
+    with open(filename, "r") as file_test:
+        for tmpline in file_test:
+            tmpline = tmpline.strip()
+            if tmpline.startswith(">"):
+                rosalindFile = "true"
+            elif (rosalindFile == "false"):
+                oneString += tmpline
+    if(rosalindFile == "false"):
+        return oneString
+    with open(filename, "r") as file_one:
+        for line in file_one:
+            line = line.strip()
+            if not line:
+                continue
+            if line.startswith(">"):
+                active_sequence_name = line[1:]
+                if active_sequence_name not in fasta:
+                    fasta[active_sequence_name] = []
+                continue
+            sequence = line
+            fasta[active_sequence_name].append(sequence)
+        numberDictKey = len(fasta)
+        numberOfValueInKey = 0
+        singleDna = ""
+        for numberDictKey in fasta:
+            valuesInKey = fasta[numberDictKey]
+            numberOfValueInKey = len(valuesInKey)
+            for numberOfValueInKey in valuesInKey:
+                singleDna += numberOfValueInKey
+                fasta[numberDictKey] = singleDna
+            singleDna = ""
+    return fasta
+
+inputLength = fastaRead(inputFilePath)
+print "The inputLength is: " + '{}'.format(inputLength)
+
+permutationsDict = {}
+numberOfPermutations = 0
+
+#Modify the inputLength because the range is exclusive
+for i in permutations(range(1, int(inputLength)+1)):
+    print i
+    permutationsDict[i] = i
+    numberOfPermutations += 1
+
+#Write everything to the output file path
+with open(outputFilePath, 'w') as f:
+    f.write('{}'.format(numberOfPermutations) + "\n")
+    for i in permutationsDict:
+        i = " ".join(map(str, i))
+        f.write(i + "\n")
+    print "Permutations have been written to: " + outputFilePath

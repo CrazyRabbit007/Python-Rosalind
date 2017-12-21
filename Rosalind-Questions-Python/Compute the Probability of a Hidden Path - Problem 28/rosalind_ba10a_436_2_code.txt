@@ -1,0 +1,28 @@
+sequence = "BBABBABBBABABABAABBAAABBABABAAABAABBABBBAAAAAAAABA"
+AtoA = 0.117
+AtoB = 0.883
+BtoA = 0.441
+BtoB = 0.559
+
+#Start at 0.5 because it's the default parameter
+prob = [0.5]
+
+for i in range(len(sequence) - 1):
+    if sequence[i] == 'A':
+        if sequence[i + 1] == 'A':
+            prob.append(AtoA)
+        else:
+            prob.append(AtoB)
+    else:
+        if sequence[i + 1] == 'A':
+            prob.append(BtoA)
+        else:
+            prob.append(BtoB)
+
+def multiplyList(myList):
+    total = 1
+    for i in myList:
+        total = total * i
+    return total
+
+print multiplyList(prob)

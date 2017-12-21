@@ -1,0 +1,216 @@
+sequenceOne = "IGWCLMTWACMTKALHETCQHRGRFCMFFPTWCTVYHGCIPGWICMNRFTSNPKLLPDFKHWTGCILYFDHMAMGICSIHNLAFYEGDVQTCNYMDRTSLVVRFCNLKYFNSAWQSWMPPFNHIIKKAWSIDGGEWVYLEGSLHNPCTLVRWQAWIGRELYLTYDMAIHRYPEKETPPNTWIQNRYGLMIQQFTNQHQLDERCYIMLKPQSIQWDNADKAGPVRMLSSGGDAGTDEFSDVSGVNQCYEEFGDAAPHTHGHPLQIIYWMGFLMAHYEKVPCIWKNYHSDNMDGDFTHPDNPKFMGYTEGIRNWRQILIPFYVKLRKKWWLDSVVRYARWNFQAEQHAMHQFCQATCVRDWWHCTDEVNHNIFRSLCHMMMWANQRDGLTKTVSRFQKSPFDWWNSDTRQVSMVKFCQHCVRHEGCPHHVFKPHFSSHPCIPQHGTLRFSGALCMLDKVTMTLVGFLMMWEITHVSYGWDFKSLQLRNKQNSHGMRVGIPQYELATHNFHVYEKFDLRIHCHYNRCMIAYKPWALSKSMDCVTPNDKDCMRHDVLWFWFPLYPVRIMVANFKREPGATPTLISDTVMSWNCCYGQVYHAWRYTCVRNFFPLVISAIQPCFAMDLIRAGANLNGDGQAPFRWHLKCTRVDKIKKFGDFNNQCNCLWTECTGGGFIGIRTCLMMWTNFWYFYGCFMVYWSMMSWHCVYYQSGDIIMMPKQQNNNTIYNFEKRLLTEVPWGWYCE"
+sequenceTwo = "IGWCGVISDTKAETCQHVGRAAQLCCTVYHAENMLRVCIPGWICMNRFTSNPKLLPDFKCWTGCILYFDQMMHYHWNHMYNPWICSKHNLSGANIIPLFYEYNYMDRTMLVVRFYYSNSYHWQSWMYSSSHRVQEINHIIKKASAPDPGEWVYLECTLVRWQAWIYRELYLTYIMAIHRYTPPNWWIRGLMIQQFANQQLDERCYIMFKPQSIQWDNALMAGPVRMLKMSGGDAGTDEFSDVSGFFDLMKGGNQCYEEFGDAAPNCDWKRDRDTHGHPYQQIIYWMGFLMAHYHKVRTIWKNYCKNRCQERKSDGMDSDFTHPDRPKFMGYTEHIRERQILIPFYVKLRKKWWLDMNVRAPCYARWNRQAELHANHQFCQATCVRDWWSCMWANQCDGLGKRDPTTNSRFKFKLPTFMNWWDNSDTRQVSMREWNKASHKFCQHCVRHEGCPHHVSIHPGDFCRKKLHTNTGIKMWQMRGFCMMWEINHTLYRSLQLRNYQNFHGMRWSLSGIPQHQWPYFNNHVYEKFDHNFQWPRKRWGVMRRRAMQEFNSWYKPWALSKSMDCVTPNDKHKRWICSLYPVRIMEPGATPICYLISDTVMSWNLCYGQVYHAWRYTPVVISWLTWMQPCFTMLVMCPGENLNGDLQAPTRVDTDFNNNCLWCTTGGFIHIRTTNFWYKIFCFFQYGCWMSQKVKSIMVRCQSGDIIMMPKQQNNNTIYNFEEVPWGWYCE"
+maxSequenceOne = len(sequenceOne)
+maxSequenceTwo = len(sequenceTwo)
+
+twoByTwoMatrix = [[0 for i in range(len(sequenceOne) + 1)] for j in range(len(sequenceTwo) + 1)]
+
+for i in range(1, len(sequenceTwo) + 1):
+    twoByTwoMatrix[i][0] = i
+for j in range(1, len(sequenceOne) + 1):
+    twoByTwoMatrix[0][j] = j
+
+for i in range(1, len(sequenceTwo) + 1):
+    for j in range(1, len(sequenceOne) + 1):
+        scores = [(sequenceTwo[i - 1] != sequenceOne[j - 1]) + twoByTwoMatrix[i - 1][j - 1],  # Score that is diagonal
+                  twoByTwoMatrix[i - 1][j] + 1,  # Score of the adjacent square above
+                  twoByTwoMatrix[i][j - 1] + 1]  # Score of the adjacent square to the left
+        twoByTwoMatrix[i][j] = min(scores)
+
+# Edit distance is the bottom right cell in the 2x2 array
+editDistance = twoByTwoMatrix[maxSequenceTwo][maxSequenceOne]
+
+print (twoByTwoMatrix)
+print (editDistance)
+
+
+optimalLength = max(maxSequenceOne, maxSequenceTwo)
+currentNumber = editDistance
+checkNumberTop = twoByTwoMatrix[maxSequenceTwo - 1][maxSequenceOne]
+checkNumberLeft = twoByTwoMatrix[maxSequenceTwo][maxSequenceOne - 1]
+checkNumberDiagonal = twoByTwoMatrix[maxSequenceTwo - 1][maxSequenceOne - 1]
+
+listSequenceOne = []
+listSequenceTwo = []
+maxSequenceOne = len(sequenceOne) - 1
+maxSequenceTwo = len(sequenceTwo) - 1
+startX = len(sequenceOne)
+startY = len(sequenceTwo)
+
+
+print "__"
+print currentNumber
+print checkNumberLeft
+print checkNumberTop
+print checkNumberDiagonal
+
+
+while (currentNumber != 0):
+
+    if (checkNumberDiagonal == 0):
+        print "Get Diagonal"
+        listSequenceOne.append(sequenceOne[maxSequenceOne])
+        listSequenceTwo.append(sequenceTwo[maxSequenceTwo])
+        maxSequenceOne -= 1
+        maxSequenceTwo -= 1
+        startX -= 1
+        startY -= 1
+        currentNumber = twoByTwoMatrix[startY][startX]
+        checkNumberTop = twoByTwoMatrix[startY - 1][startX]
+        checkNumberLeft = twoByTwoMatrix[startY][startX - 1]
+        checkNumberDiagonal = twoByTwoMatrix[startY - 1][startX - 1]
+        print listSequenceOne
+        print listSequenceTwo
+        print currentNumber
+        print checkNumberTop
+        print checkNumberDiagonal
+        print checkNumberLeft
+        continue
+
+    if (checkNumberTop == 0):
+        print "Get Top"
+        listSequenceOne.append("-")
+        listSequenceTwo.append(sequenceTwo[maxSequenceTwo])
+        maxSequenceTwo -= 1
+        startY -= 1
+        currentNumber = twoByTwoMatrix[startY][startX]
+        checkNumberTop = twoByTwoMatrix[startY - 1][startX]
+        checkNumberLeft = twoByTwoMatrix[startY][startX - 1]
+        checkNumberDiagonal = twoByTwoMatrix[startY - 1][startX - 1]
+        print listSequenceOne
+        print listSequenceTwo
+        print currentNumber
+        print checkNumberTop
+        print checkNumberDiagonal
+        print checkNumberLeft
+        continue
+
+    if (checkNumberLeft == 0):
+        print "Get Left"
+        listSequenceTwo.append("-")
+        listSequenceOne.append(sequenceOne[maxSequenceOne])
+        maxSequenceOne -= 1
+        startX -= 1
+        currentNumber = twoByTwoMatrix[startY][startX]
+        checkNumberTop = twoByTwoMatrix[startY - 1][startX]
+        checkNumberLeft = twoByTwoMatrix[startY][startX - 1]
+        checkNumberDiagonal = twoByTwoMatrix[startY - 1][startX - 1]
+        print listSequenceOne
+        print listSequenceTwo
+        print currentNumber
+        print checkNumberTop
+        print checkNumberDiagonal
+        print checkNumberLeft
+        continue
+
+    if (currentNumber == checkNumberDiagonal):
+        print "Get Diagonal"
+        listSequenceOne.append(sequenceOne[maxSequenceOne])
+        listSequenceTwo.append(sequenceTwo[maxSequenceTwo])
+        maxSequenceOne -= 1
+        maxSequenceTwo -= 1
+        startX -= 1
+        startY -= 1
+        currentNumber = twoByTwoMatrix[startY][startX]
+        checkNumberTop = twoByTwoMatrix[startY - 1][startX]
+        checkNumberLeft = twoByTwoMatrix[startY][startX - 1]
+        checkNumberDiagonal = twoByTwoMatrix[startY - 1][startX - 1]
+        print listSequenceOne
+        print listSequenceTwo
+        print currentNumber
+        print checkNumberTop
+        print checkNumberDiagonal
+        print checkNumberLeft
+        continue
+
+
+    if ((currentNumber - 1) == checkNumberDiagonal):
+        if (((currentNumber - 1) != checkNumberTop) and ((currentNumber - 1) != checkNumberLeft)):
+            print "Get Diagonal"
+            listSequenceOne.append(sequenceOne[maxSequenceOne])
+            listSequenceTwo.append(sequenceTwo[maxSequenceTwo])
+            maxSequenceOne -= 1
+            maxSequenceTwo -= 1
+            startX -= 1
+            startY -= 1
+            currentNumber = twoByTwoMatrix[startY][startX]
+            checkNumberTop = twoByTwoMatrix[startY - 1][startX]
+            checkNumberLeft = twoByTwoMatrix[startY][startX - 1]
+            checkNumberDiagonal = twoByTwoMatrix[startY - 1][startX - 1]
+            print listSequenceOne
+            print listSequenceTwo
+            print currentNumber
+            print checkNumberTop
+            print checkNumberDiagonal
+            print checkNumberLeft
+            continue
+
+    if ((currentNumber - 1) == checkNumberTop):
+        print "Get Top"
+        listSequenceOne.append("-")
+        listSequenceTwo.append(sequenceTwo[maxSequenceTwo])
+        maxSequenceTwo -= 1
+        startY -= 1
+        currentNumber = twoByTwoMatrix[startY][startX]
+        checkNumberTop = twoByTwoMatrix[startY - 1][startX]
+        checkNumberLeft = twoByTwoMatrix[startY][startX - 1]
+        checkNumberDiagonal = twoByTwoMatrix[startY - 1][startX - 1]
+        print listSequenceOne
+        print listSequenceTwo
+        print currentNumber
+        print checkNumberTop
+        print checkNumberDiagonal
+        print checkNumberLeft
+        continue
+
+
+    if ((currentNumber - 1) == checkNumberLeft):
+        print "Get Left"
+        listSequenceTwo.append("-")
+        listSequenceOne.append(sequenceOne[maxSequenceOne])
+        maxSequenceOne -= 1
+        startX -= 1
+        currentNumber = twoByTwoMatrix[startY][startX]
+        checkNumberTop = twoByTwoMatrix[startY - 1][startX]
+        checkNumberLeft = twoByTwoMatrix[startY][startX - 1]
+        checkNumberDiagonal = twoByTwoMatrix[startY - 1][startX - 1]
+        print listSequenceOne
+        print listSequenceTwo
+        print currentNumber
+        print checkNumberTop
+        print checkNumberDiagonal
+        print checkNumberLeft
+        continue
+
+
+
+
+
+print "out of while loop"
+print listSequenceOne
+print listSequenceTwo
+listSequenceOneEnd = []
+listSequenceTwoEnd = []
+listSequenceOneEnd += sequenceOne[:maxSequenceOne+1]
+listSequenceTwoEnd += sequenceTwo[:maxSequenceTwo+1]
+listSequenceOneEnd.reverse()
+listSequenceTwoEnd.reverse()
+
+listSequenceOne += listSequenceOneEnd
+listSequenceTwo += listSequenceTwoEnd
+
+listSequenceOne.reverse()
+listSequenceTwo.reverse()
+
+newSequenceOne = ""
+newSequenceTwo = ""
+
+for i in listSequenceOne:
+    newSequenceOne += i
+
+for i in listSequenceTwo:
+    newSequenceTwo += i
+
+print editDistance
+print newSequenceOne
+print newSequenceTwo

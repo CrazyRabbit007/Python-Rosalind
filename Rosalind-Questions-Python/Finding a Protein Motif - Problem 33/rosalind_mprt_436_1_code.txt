@@ -1,0 +1,48 @@
+inputFilePath = "/Users/RJ/Downloads/rosalind_mprt.txt"
+outputFilePath = "/Users/RJ/Desktop/answer.txt"
+
+import re
+import urllib2
+
+def getUniProteinFromFasta(id):
+    #Access the Uni Protein Website
+    uniProtWebsite = "http://www.uniprot.org/uniprot/%s.fasta" % id
+    webResponse = urllib2.urlopen(uniProtWebsite)
+    mainPage = webResponse.read()
+
+    #Grab the specific sequence
+    editedSequence = re.sub('^\>(.*)\n', '', mainPage, 1)
+    editedSequence = editedSequence.replace('\n', '')
+    return editedSequence
+
+def createAccessIdList(fileName):
+    # Get each access Id into a list
+    accessIdList = []
+    for line in open(fileName).readlines():
+        accessIdList.append(line.strip())
+    return accessIdList
+
+def findMotifFromUniProtein(uniProtein):
+    #For the N-glycosylation Motif
+    glycosylationMotif = r'(?=N[^P][ST][^P])'
+    substringIndex = []
+    locationOfMotif = re.finditer(glycosylationMotif, uniProtein)
+    #Search for the string index and store them in a list
+    for i in locationOfMotif:
+        substringIndex.append(str(i.start(0) + 1))
+    return substringIndex
+
+
+with open(outputFilePath, 'w') as f:
+    accessIdList = createAccessIdList(inputFilePath)
+    for id in accessIdList:
+        uniProtein = getUniProteinFromFasta(id)
+        motifLocation = findMotifFromUniProtein(uniProtein)
+        if len(motifLocation) != 0:
+            f.write('{}'.format(id ))
+            f.write('{}'.format("\n"))
+            f.write('{}'.format( ' '.join(motifLocation)))
+            f.write('{}'.format("\n"))
+
+
+print "Sequence locations have been written to: " + outputFilePath

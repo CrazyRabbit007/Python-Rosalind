@@ -1,0 +1,76 @@
+inputFilePath = "/Users/RJ/Downloads/rosalind_ba9g.txt"
+outputFilepath = "/Users/RJ/Desktop/answer.txt"
+import sys
+
+#Read the file and import the string
+def fastaRead(filename):
+    """This reads the Rosalind file and turns the sequences into a list"""
+    fasta = {}
+    with open(filename, "r") as file_one:
+        for line in file_one:
+            line = line.strip()
+            if not line:
+                continue
+            if line.startswith(">"):
+                active_sequence_name = line[1:]
+                if active_sequence_name not in fasta:
+                    fasta[active_sequence_name] = []
+                continue
+            sequence = line
+            fasta[active_sequence_name].append(sequence)
+        numberDictKey = len(fasta)
+        numberOfValueInKey = 0
+        singleDna = ""
+        for numberDictKey in fasta:
+            valuesInKey = fasta[numberDictKey]
+            numberOfValueInKey = len(valuesInKey)
+
+            for numberOfValueInKey in valuesInKey:
+                singleDna += numberOfValueInKey
+
+                fasta[numberDictKey] = singleDna
+            singleDna = ""
+    return fasta
+
+rosalindDict = fastaRead(inputFilePath)
+
+for i in rosalindDict:
+    inputString = rosalindDict[i]
+
+print inputString
+
+#Get the length of the inputString
+print "Get the length of the inputString"
+lengthOfString = len(inputString)
+print "The length of the inputString is: " + '{}'.format(lengthOfString)
+
+#Create the dictionary where keys are 0-length and the values are permutations
+suffixDict = {}
+#Create the dictionary where keys are permutations and values 0-length
+suffixDictReverse = {}
+
+for i in range(lengthOfString):
+    permutation = inputString[i:lengthOfString]
+    suffixDict[i]=permutation
+    suffixDictReverse[permutation]=i
+
+print "Create the dictionary where keys are 0-length and the values are permutations"
+print suffixDict
+print "Create the dictionary where keys are permutations and values 0-length"
+print suffixDictReverse
+
+#Sort the List via permutations
+orderedList = sorted(suffixDict.values())
+numberOfElements = len(orderedList)
+
+#Use the sorted list as keys to print the values from the reverse Dict
+print "Use the sorted list as keys to print the values from the reverse Dict..."
+with open(outputFilepath, 'w') as f:
+    count = 0
+    for i in orderedList:
+        f.write('{}'.format(suffixDictReverse[i]))
+        count += 1
+        if count != numberOfElements:
+            f.write(", ")
+
+print "Values have been printed to: " + outputFilepath

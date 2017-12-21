@@ -1,0 +1,38 @@
+inputFilePath = "/Users/RJ/Downloads/rosalind_iprb-2.txt"
+outputFilePath = "/Users/RJ/Desktop/answer.txt"
+
+import re
+
+with open(inputFilePath, "r") as file_test:
+	file_test = file_test.readline()
+
+print "Get the strings into a dictionary..."
+print file_test
+
+print "Get only the numbers (homozygous dominant, heterozygous, homozygous recessive)..."
+populationList = (re.findall('\d+', file_test))
+
+total = 0
+homoDominant = float(populationList[0])
+heterozygous = float(populationList[1])
+homoRecessive = float(populationList[2])
+
+for p in populationList:
+	total += float(p)
+
+dominantTotal = homoDominant/total
+heterozygousDominantTotal = (heterozygous/total) * ((homoDominant/(total-1)) + (heterozygous-1)/(total-1) * 0.75 + ((homoRecessive/(total-1)) * 0.5))
+domHeterRecesTotal = (homoRecessive/total) * (homoDominant/(total-1) + heterozygous/(total-1) * 0.5)
+
+
+print dominantTotal
+print heterozygousDominantTotal
+print domHeterRecesTotal
+
+completeProbablity = dominantTotal + heterozygousDominantTotal + domHeterRecesTotal
+
+print completeProbablity
+
+with open(outputFilePath, 'w') as f:
+	f.write('{}'.format(completeProbablity))
+print "Character locations have been written to: " + outputFilePath

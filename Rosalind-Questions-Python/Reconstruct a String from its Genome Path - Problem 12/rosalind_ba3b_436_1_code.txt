@@ -1,0 +1,19 @@
+content = ""
+char = ""
+fullcontent = ""
+switch = True
+
+with open('/Users/RJ/Desktop/rosalind_ba3b.txt') as f:
+    content = f.readlines()
+    content = [x.strip() for x in content]
+
+for i in content:
+    if switch:
+        fullcontent = i
+        switch = False
+        continue
+    char = i
+    char = char[-1:]
+    fullcontent += char
+
+print fullcontent

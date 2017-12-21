@@ -1,0 +1,4 @@
+a='MUvEAW62xhYuAE40jfzgWMOngF8qzNeWcITestudoAKcrNOsNS56QRM0nW9Mcpelegansr5R6qZByBmlLFaCCbtSGexEnhndxL2hD391l2nteeq28YzxUXF534b9G6sCdPoX8yHEmW5uMauFZGVpZFl2DOAkgeG673EdodAF2Tgw2wS180rQMhlL5s7hNdiNwN3D.'
+atob = a[34:41]
+ctod = a[62:69]
+print atob, ctod

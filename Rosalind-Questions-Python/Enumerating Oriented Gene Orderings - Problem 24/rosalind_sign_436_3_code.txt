@@ -1,0 +1,78 @@
+inputFilePath = "/Users/RJ/Downloads/rosalind_sign-2.txt"
+outputFilePath = "/Users/RJ/Desktop/answer.txt"
+
+from itertools import permutations
+
+def fastaRead(filename):
+    """This reads the Rosalind file and turns the sequences into a list"""
+    fasta = {}
+    rosalindFile = "false"
+    oneString = ""
+    with open(filename, "r") as file_test:
+        for tmpline in file_test:
+            tmpline = tmpline.strip()
+            if tmpline.startswith(">"):
+                rosalindFile = "true"
+            elif (rosalindFile == "false"):
+                oneString += tmpline
+    if(rosalindFile == "false"):
+        return oneString
+    with open(filename, "r") as file_one:
+        for line in file_one:
+            line = line.strip()
+            if not line:
+                continue
+            if line.startswith(">"):
+                active_sequence_name = line[1:]
+                if active_sequence_name not in fasta:
+                    fasta[active_sequence_name] = []
+                continue
+            sequence = line
+            fasta[active_sequence_name].append(sequence)
+        numberDictKey = len(fasta)
+        numberOfValueInKey = 0
+        singleDna = ""
+        for numberDictKey in fasta:
+            valuesInKey = fasta[numberDictKey]
+            numberOfValueInKey = len(valuesInKey)
+            for numberOfValueInKey in valuesInKey:
+                singleDna += numberOfValueInKey
+                fasta[numberDictKey] = singleDna
+            singleDna = ""
+    return fasta
+
+inputLength = fastaRead(inputFilePath)
+inputLength = int(inputLength)
+print "The inputLength is: " + '{}'.format(inputLength)
+templine = ""
+
+permutationsDict = {}
+permutationsList = []
+duplicate = "false";
+
+#Modify the inputLength because the range is exclusive
+for i in permutations(range((-1 * inputLength), (inputLength + 1)), inputLength):
+    itemPerm = " ".join(map(str, i))
+    itemPerm = str(itemPerm)
+    if itemPerm not in permutationsList:
+        if ('0' not in itemPerm):
+            for indexCount in range((inputLength - (inputLength - 1)), (inputLength + 1)):
+                if(itemPerm.count(str(indexCount)) == 2):
+                    duplicate = "true"
+            if(duplicate == "true"):
+                duplicate = "false"
+                continue
+            else:
+                permutationsList.append(i)
+
+permutationsList.sort()
+for i in permutationsList:
+    print i
+
+#Write everything to the output file path
+with open(outputFilePath, 'w') as f:
+    f.write('{}'.format(len(permutationsList)) + "\n")
+    for i in permutationsList:
+        i = " ".join(map(str, i))
+        f.write(i + "\n")
+    print "Permutations have been written to: " + outputFilePath

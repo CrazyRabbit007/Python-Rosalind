@@ -1,0 +1,171 @@
+filename = "/Users/RJ/Downloads/rosalind_edta-5.txt"
+
+def fastaRead(filename):
+    fasta = {}
+    with open(filename, "r") as file_one:
+        for line in file_one:
+            line = line.strip()
+            if not line:
+                continue
+            if line.startswith(">"):
+                active_sequence_name = line[1:]
+                if active_sequence_name not in fasta:
+                    fasta[active_sequence_name] = []
+                continue
+            sequence = line
+            fasta[active_sequence_name].append(sequence)
+        numberDictKey = len(fasta)
+        numberOfValueInKey = 0
+        singleDna = ""
+        for numberDictKey in fasta:
+            valuesInKey = fasta[numberDictKey]
+            numberOfValueInKey = len(valuesInKey)
+
+            for numberOfValueInKey in valuesInKey:
+                singleDna += numberOfValueInKey
+
+                fasta[numberDictKey] = singleDna
+            singleDna = ""
+    return fasta
+
+rosalind = fastaRead(filename)
+
+sequenceList = []
+for i in rosalind:
+    sequenceList.append(rosalind[i])
+
+sequenceList.reverse()
+sequenceOne = sequenceList[0]
+sequenceTwo = sequenceList[1]
+maxSequenceOne = len(sequenceOne)
+maxSequenceTwo = len(sequenceTwo)
+
+twoByTwoMatrix = [[0 for i in range(len(sequenceOne) + 1)] for j in range(len(sequenceTwo) + 1)]
+pathMatrix = [[0 for i in range(len(sequenceOne) + 1)] for j in range(len(sequenceTwo) + 1)]
+
+
+for i in range(1, len(sequenceTwo) + 1):
+    twoByTwoMatrix[i][0] = i
+for j in range(1, len(sequenceOne) + 1):
+    twoByTwoMatrix[0][j] = j
+
+pathMatrix[0][0] = "stop"
+for i in range(1, len(sequenceTwo) + 1):
+    pathMatrix[i][0] = "top"
+for j in range(1, len(sequenceOne) + 1):
+    pathMatrix[0][j] = "left"
+
+
+direction = ""
+diagonalValue = 0
+leftValue = 0
+topValue = 0
+inputValue = 0
+
+for i in range(1, len(sequenceTwo) + 1):
+    for j in range(1, len(sequenceOne) + 1):
+        if(sequenceOne[j-1] == sequenceTwo[i-1]):
+            inputValue = twoByTwoMatrix[i - 1][j - 1]
+            direction = "D"
+        else:
+            topValue = twoByTwoMatrix[i - 1][j] + 1
+            leftValue = twoByTwoMatrix[i][j - 1] + 1
+            diagonalValue = twoByTwoMatrix[i - 1][j - 1] + 1
+            inputValue = min(topValue,leftValue,diagonalValue)
+            if (inputValue == leftValue):
+                direction = "L"
+            if(inputValue == topValue):
+                direction = "T"
+            if(inputValue == diagonalValue):
+                direction = "D"
+                if(diagonalValue == topValue):
+                    direction = "T"
+                if (diagonalValue == leftValue):
+                    direction = "L"
+
+        twoByTwoMatrix[i][j] = inputValue
+        pathMatrix[i][j] = direction
+
+# Edit distance is the bottom right cell in the 2x2 array
+editDistance = twoByTwoMatrix[len(sequenceTwo)][len(sequenceOne)]
+
+
+optimalLength = max(maxSequenceOne, maxSequenceTwo)
+currentNumber = editDistance
+checkNumberTop = twoByTwoMatrix[maxSequenceTwo - 1][maxSequenceOne]
+checkNumberLeft = twoByTwoMatrix[maxSequenceTwo][maxSequenceOne - 1]
+checkNumberDiagonal = twoByTwoMatrix[maxSequenceTwo - 1][maxSequenceOne - 1]
+
+listSequenceOne = []
+listSequenceTwo = []
+maxSequenceOne = len(sequenceOne) - 1
+maxSequenceTwo = len(sequenceTwo) - 1
+startX = len(sequenceOne)
+startY = len(sequenceTwo)
+
+stepsRyan =[]
+stepsRyanNoDetail = []
+
+print "the start is on " + '{}'.format(twoByTwoMatrix[startY][startX])
+while (startX != 0 and startY != 0):
+
+    if(pathMatrix[startY][startX] == "D"):
+        stepsRyan.append("diagonal" " " + '{}'.format(currentNumber) + " " + '{}'.format(checkNumberTop) + " " + '{}'.format(checkNumberDiagonal) + " " + '{}'.format(checkNumberLeft))
+        stepsRyanNoDetail.append("diagonal")
+        listSequenceOne.append(sequenceOne[maxSequenceOne])
+        listSequenceTwo.append(sequenceTwo[maxSequenceTwo])
+        maxSequenceOne -= 1
+        maxSequenceTwo -= 1
+        startX -= 1
+        startY -= 1
+        currentNumber = twoByTwoMatrix[startY][startX]
+        checkNumberTop = twoByTwoMatrix[startY - 1][startX]
+        checkNumberLeft = twoByTwoMatrix[startY][startX - 1]
+        checkNumberDiagonal = twoByTwoMatrix[startY - 1][startX - 1]
+        continue
+
+
+    if (pathMatrix[startY][startX] == "T"):
+        stepsRyan.append("top" " " + '{}'.format(currentNumber) + " " + '{}'.format(checkNumberTop) + " " + '{}'.format(checkNumberDiagonal) + " " + '{}'.format(checkNumberLeft))
+        stepsRyanNoDetail.append("top")
+        listSequenceOne.append("-")
+        listSequenceTwo.append(sequenceTwo[maxSequenceTwo])
+        maxSequenceTwo -= 1
+        startY -= 1
+        currentNumber = twoByTwoMatrix[startY][startX]
+        checkNumberTop = twoByTwoMatrix[startY - 1][startX]
+        checkNumberLeft = twoByTwoMatrix[startY][startX - 1]
+        checkNumberDiagonal = twoByTwoMatrix[startY - 1][startX - 1]
+        continue
+
+    if (pathMatrix[startY][startX] == "L"):
+        stepsRyan.append("left" " " + '{}'.format(currentNumber) + " " + '{}'.format(checkNumberTop) + " " + '{}'.format(checkNumberDiagonal) + " " + '{}'.format(checkNumberLeft))
+        stepsRyanNoDetail.append("left")
+        listSequenceTwo.append("-")
+        listSequenceOne.append(sequenceOne[maxSequenceOne])
+        maxSequenceOne -= 1
+        startX -= 1
+        currentNumber = twoByTwoMatrix[startY][startX]
+        checkNumberTop = twoByTwoMatrix[startY - 1][startX]
+        checkNumberLeft = twoByTwoMatrix[startY][startX - 1]
+        checkNumberDiagonal = twoByTwoMatrix[startY - 1][startX - 1]
+        continue
+
+
+listSequenceOne.reverse()
+listSequenceTwo.reverse()
+
+newSequenceOne = ""
+newSequenceTwo = ""
+
+for i in listSequenceOne:
+    newSequenceOne += i
+
+for i in listSequenceTwo:
+    newSequenceTwo += i
+
+
+with open("/Users/RJ/Desktop/answer.txt", 'w') as f:
+    f.write('{}'.format(editDistance) + '\n')
+    f.write(newSequenceTwo + '\n')
+    f.write(newSequenceOne + '\n')
